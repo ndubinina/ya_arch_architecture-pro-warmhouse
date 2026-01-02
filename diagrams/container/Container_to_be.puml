@@ -1,0 +1,44 @@
+@startuml
+title Smarthome Container Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+
+
+Person(user, "User", "Пользователь умного дома")
+
+System(SmarthouseSystem, "Smarthouse System", "Система умного дома")
+
+Container_Boundary(SmarthouseSystem, "Smarthouse System") {
+  Container(WebApp, "Фронтовое приложение", "JavaSpring, React", "Формирование SPA")
+  Container(FacadeSmarthome, "Facade Smarthome", "Kotlin, Spring", "Аутентификация пользователей и маршрутизация запросов")
+  Container(UserService, "User Service", "Kotlin, Spring", "Управление пользователями")
+  Container(UserDatabase, "User Database", "PostgreSQL", "Хранит пользователей")
+  Container(DeviceService, "Device Service", "Kotlin, Spring", "Управление датчиками")
+  Container(DeviceDatabase, "Device Database", "PostgreSQL", "Хранит датчики пользователя")
+  Container(TelemetryService, "Telemetry Service", "Kotlin, Spring", "Собирает телеметрию с датчиков")
+  Container(TelemetryDatabase, "Telemetry Database", "PostgreSQL", "Хранит показатели датчиков")
+  ContainerQueue(Kafka, "Kafka", "", "События: управления датчиком, изменение показаний")
+  ContainerQueue(MQTT, "MQTT", "", "События с датчиков")
+  Container(DeviceEventFacade, "DeviceEventFacade", "Kotlin, Spring", "Валидирует и фильтрует события с датчиков")
+}
+
+System_Ext(device_ext, "Device External System", "Датчики")
+
+Rel(user, WebApp, "Взаимодействие с приложением: регистрация, просмотр и управление датчиками")
+Rel(WebApp, FacadeSmarthome, "Регистрация, управление датчиками, просмотр телеметрии")
+Rel(FacadeSmarthome, UserService, "Регистрация пользователя")
+Rel(UserService, UserDatabase, " ")
+Rel(FacadeSmarthome, DeviceService, "Управление датчиками")
+Rel(DeviceService, Kafka, "Публикует события управления датчиком - device_changed")
+Rel(DeviceService, device_ext, "Управляет датчиком и его показаниями(HTTP)")
+Rel(DeviceService, DeviceDatabase, " ")
+Rel(FacadeSmarthome, TelemetryService, "Просмотр телеметрии")
+Rel(TelemetryService, TelemetryDatabase, "Запрос и обновление телеметрии датчика")
+Rel(device_ext, MQTT, "Публикует события с датчиков")
+Rel(DeviceEventFacade, MQTT, "Слушает события с датчиков")
+Rel(DeviceEventFacade, Kafka, "Публикует события telemetry")
+Rel(TelemetryService, Kafka, "Слушает события telemetry, device_changed")
+
+@enduml

@@ -1,0 +1,30 @@
+@startuml
+title TelemetryService Code Diagram
+
+top to bottom direction
+
+class Telemetry {
+  +String value
+  +String unit
+  +String status
+  +Timestamp created_at
+}
+
+class TelemetryHistory {
+  +Telemetry telemetry
+  +void valueOf(telemetry: Telemetry)
+}
+
+class TelemetryService {
+  +void updateTelemetry(deviceId: String, telemetry: Telemetry)
+  +void getByDeviceId(deviceId: UUID)
+  +void getByLocationId(locationId: UUID)
+}
+
+TelemetryHistory "1" -- "1" Telemetry : has
+
+note right of TelemetryService::updateTelemetry
+  обновляет объект Telemetry, сохраняет предыдущее значение в TelemetryHistory
+end note
+
+@enduml

@@ -1,0 +1,72 @@
+@startuml
+entity User {
+  +id : UUID (PK)
+  --
+  login : String
+  passwd_hash : String
+  name : String
+  email : String
+  created_at : Timestamp
+  modified_at : Timestamp
+}
+
+entity Device {
+  +id : UUID (PK)
+  --
+  location_id: UUID
+  external_id : String
+  user_id : UUID
+  name : String
+  type : String
+  created_at : Timestamp
+  modified_at : Timestamp
+}
+
+entity Location {
+  +id : UUID (PK)
+  --
+  user_id : UUID
+  name : String
+  created_at : Timestamp
+  modified_at : Timestamp
+}
+
+entity Telemetry {
+  +device_id : UUID (PK)
+  --
+  value : String
+  unit : String
+  status : String
+  created_at : Timestamp
+}
+
+entity TelemetryHistory {
+  id: Long (PK)
+  --
+  device_id : UUID
+  value : String
+  unit : String
+  status : String
+  created_at : Timestamp
+}
+
+User ||--o{ Device : owns
+User ||--o{ Location : owns
+Device ||--|| Telemetry : has
+Device ||--o{ TelemetryHistory : has
+Location ||--o{ Device : include
+
+note right of Device::external_id
+  id датчика во внешней системе
+end note
+
+note right of Location
+  локация для объединения датчиков в группы
+  для удобства пользователя(дом, комната)
+end note
+
+note right of TelemetryHistory
+  некоторое время храним историю показаний
+end note
+
+@enduml

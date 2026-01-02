@@ -1,0 +1,71 @@
+openapi: 3.0.3
+info:
+  title: Temperature API
+  version: 1.0.0
+
+paths:
+  /temperature:
+    get:
+      summary: Получение телеметрии датчиков из заданной локации
+      parameters:
+        - name: location
+          in: query
+          required: true
+          description: Локация датчиков
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Список телеметрий для всех датчиков из заданной локации
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemperatureResponse'
+
+  /temperature/{sensorId}:
+    get:
+      summary: Получение телеметрии датчика по id
+      parameters:
+        - name: sensorId
+          in: path
+          required: true
+          description: id датчика
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Телеметрия датчика
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemperatureResponse'
+
+components:
+  schemas:
+    TemperatureResponse:
+      type: object
+      properties:
+        sensor_id:
+          type: string
+        sensor_type:
+          type: string
+        value:
+          type: string
+          format: float
+        unit:
+          type: string
+        status:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        location:
+          type: string
+        description:
+          type: string
+      required:
+        - deviceId
+        - status
+        - createdAt
