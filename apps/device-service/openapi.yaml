@@ -67,6 +67,40 @@ paths:
         '500':
           description: Ошибка сервера
 
+    get:
+      summary: Получение данных датчика
+      parameters:
+        - name: userId
+          in: header
+          required: true
+          description: id пользователя
+          schema:
+            type: string
+          example: 62b79c75-4b44-45a2-bbc8-9a77ff525be9
+        - name: deviceId
+          in: path
+          required: true
+          description: Идентификатор датчика
+          schema:
+            type: string
+          example: 77779c75-4b44-45a2-bbc8-9a77ff525be9
+      responses:
+        '200':
+          description: Информация о датчике
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+              example:
+                deviceId: 77779c75-4b44-45a2-bbc8-9a77ff525be9
+                locationId: 62b79c75-4b44-45a2-bbc8-9a77ff525be9
+                externalId: 121
+                name: Living Room Temperature
+                type: temperature
+        '404':
+          description: У пользователя не найден датчик с заданным id
+        '500':
+          description: Ошибка сервера
 
   /v1/device/{deviceId}/control:
     patch:
@@ -149,3 +183,26 @@ components:
       required:
         - value
         - status
+
+    DeviceResponse:
+      type: object
+      properties:
+        deviceId:
+          type: string
+          description: идентификатор датчика
+        locationId:
+          type: string
+          description: идентификатор локации датчика
+        externalId:
+          type: string
+          description: идентификатор датчика во внешней системе (device external system)
+        name:
+          type: string
+          description: наименование датчика
+        type:
+          type: string
+          description: тип датчика
+      required:
+        - deviceId
+        - externalId
+        - type

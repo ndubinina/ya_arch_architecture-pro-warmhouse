@@ -17,3 +17,11 @@ apps/temperature-api/.idea/
 apps/temperature-api/.gradle/
 apps/temperature-api/build/
 apps/temperature-api/*.iml
+apps/telemetry-service/.idea/
+apps/telemetry-service/.gradle/
+apps/telemetry-service/build/
+apps/telemetry-service/*.iml
+apps/device-service/.idea/
+apps/device-service/.gradle/
+apps/device-service/build/
+apps/device-service/*.iml

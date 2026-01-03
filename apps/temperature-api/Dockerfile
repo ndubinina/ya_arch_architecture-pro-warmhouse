@@ -2,14 +2,17 @@ FROM gradle:jdk21-alpine AS builder
 
 WORKDIR /app
 
-COPY build.gradle.kts settings.gradle.kts gradle/ ./
-COPY gradle/ gradle/
+COPY gradlew .
+COPY gradle gradle/
+RUN chmod +x gradlew
+COPY build.gradle.kts settings.gradle.kts ./
 
-RUN gradle build --write-verification-metadata sha256 || true
+RUN ./gradlew dependencies --no-daemon
 
-COPY . .
 
-RUN gradle clean build
+COPY src src
+
+RUN ./gradlew clean build -x test --no-daemon
 
 FROM alpine/java:21-jre
 

@@ -42,6 +42,43 @@ paths:
               schema:
                 $ref: '#/components/schemas/TemperatureResponse'
 
+  /device/{deviceId}/control:
+    patch:
+      summary: Управление показателями датчика
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          description: id датчика
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceControlRequest'
+            example:
+              value: 21.0
+              status: active
+      responses:
+        '202':
+          description: Команда принята в обработку
+
+  /device/{deviceId}/produce_value:
+    post:
+      summary: Отправка изменения показаний датчика в kafka (value генерируется случайно)
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          description: id датчика
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ок
+
 components:
   schemas:
     TemperatureResponse:
@@ -69,3 +106,16 @@ components:
         - deviceId
         - status
         - createdAt
+
+    DeviceControlRequest:
+      type: object
+      properties:
+        value:
+          type: string
+          description: значение показателя
+        status:
+          type: string
+          description: статус датчика(active, inactive)
+      required:
+        - value
+        - status
