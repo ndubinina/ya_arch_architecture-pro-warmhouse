@@ -3,6 +3,7 @@ package ru.arch.smarthouse.tempo_mock.adapter.kafka.config
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
@@ -12,6 +13,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer
 import ru.arch.smarthouse.tempo_mock.adapter.kafka.model.TelemetryEvent
 
 @Configuration
+@ConditionalOnProperty(name = ["kafka.enabled"], havingValue = "true")
 class KafkaProducerConfig() {
     @Value("\${kafka.bootstrap.servers}")
     lateinit var kafkaBootstrapServers: String
