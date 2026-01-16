@@ -1,0 +1,24 @@
+@startuml
+title TelemetryService Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(SmartHouseSystem, "SmartHouse System") {
+  Container(TelemetryService, "Telemetry Service", "Kotlin, Spring", "Собирает телеметрию с датчиков")
+  Container(TelemetryDatabase, "Telemetry Database", "PostgreSQL", "Хранит показатели датчиков")
+}
+
+Container(TelemetryService, "Telemetry Service", "Kotlin, Spring") {
+  Component(DeviceEventListener, "DeviceEventListener", "Обрабатывает события изменения телеметрии датчика, удаления датчика")
+  Component(TelemetryController, "TelemetryController", "Обрабатывает запросы чтения телеметрии")
+  Component(ServiceLayer, "ServiceLayer", "Бизнес логика")
+  Component(RepositoryLayer, "RepositoryLayer", "Инкапсуляция специфики БД")
+}
+
+Rel(DeviceEventListener,ServiceLayer,"Сохранить показатели датчика/удалить датчик")
+Rel(TelemetryController,ServiceLayer,"Прочитать показатели датчиков")
+Rel(ServiceLayer,RepositoryLayer,"Запрос/обновление данных")
+Rel(RepositoryLayer,TelemetryDatabase,"Запрос/обновление данных")
+@enduml

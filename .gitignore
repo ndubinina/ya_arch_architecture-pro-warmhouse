@@ -1,1 +1,27 @@
+# Default ignored files
+/shelf/
+/.idea/workspace.xml
+
+.idea/
+*.iml
+*.ipr
+*.iws
 .DS_Store
+/misc.xml
+/modules.xml
+/vcs.xml
+/compiler.xml
+/gradle.xml
+/kotlinc.xml
+apps/temperature-api/.idea/
+apps/temperature-api/.gradle/
+apps/temperature-api/build/
+apps/temperature-api/*.iml
+apps/telemetry-service/.idea/
+apps/telemetry-service/.gradle/
+apps/telemetry-service/build/
+apps/telemetry-service/*.iml
+apps/device-service/.idea/
+apps/device-service/.gradle/
+apps/device-service/build/
+apps/device-service/*.iml

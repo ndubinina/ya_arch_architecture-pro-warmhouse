@@ -1,0 +1,34 @@
+@startuml
+title Facade Smarthome Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(SmartHouseSystem, "SmartHouse System") {
+  Container(FacadeSmarthome, "Facade Smarthome", "Kotlin, Spring", "Аутентификация пользователей и маршрутизация запросов")
+  Container(UserService, "UserService", "Kotlin, Spring", "Управление пользователями")
+  Container(DeviceService, "DeviceService", "Kotlin, Spring", "Управление датчиками")
+  Container(TelemetryService, "TelemetryService", "Kotlin, Spring", "Просмотр телеметрии")
+}
+
+Container(FacadeSmarthome, "Facade Smarthome", "Kotlin, Spring") {
+  Component(UserController, "UserController", "Управление пользователями")
+  Component(DeviceController, "DeviceController", "Управление датчиком")
+  Component(TelemetryController, "TelemetryController", "Просмотр телеметрии")
+  Component(AuthLayer, "AuthLayer", "Аутентификация")
+  Component(AdapterUserService, "AdapterUserService", "Инкапсулирует специфику взаимодействия с User Service")
+  Component(AdapterDeviceService, "AdapterDeviceService", "Инкапсулирует специфику взаимодействия с Device Service")
+  Component(AdapterTelemetryService, "AdapterTelemetryService", "Инкапсулирует специфику взаимодействия с Telemetry Service")
+}
+
+Rel(UserController,AdapterUserService,"Управление пользователем")
+Rel(UserController,AuthLayer,"Аутентификация")
+Rel(AdapterUserService,UserService,"Управление пользователем")
+Rel(DeviceController,AdapterDeviceService,"Управление датчиком")
+Rel(DeviceController,AuthLayer,"Аутентификация")
+Rel(AdapterDeviceService,DeviceService,"Управление датчиком")
+Rel(TelemetryController,AdapterTelemetryService,"Просмотр телеметрии")
+Rel(TelemetryController,AuthLayer,"Аутентификация")
+Rel(AdapterTelemetryService,TelemetryService,"Просмотр телеметрии")
+@enduml

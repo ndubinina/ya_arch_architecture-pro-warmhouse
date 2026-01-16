@@ -1,0 +1,96 @@
+openapi: 3.0.3
+info:
+  title: Telemetry Service API
+  version: 1.0.0
+
+paths:
+  /v1/telemetry/by_location/{locationId}:
+    get:
+      summary: Получение телеметрии датчиков из заданной локации
+      parameters:
+        - name: userId
+          in: header
+          required: true
+          description: id пользователя
+          schema:
+            type: string
+        - name: locationId
+          in: path
+          required: true
+          description: Идентификатор локации датчиков
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Список телеметрий для всех датчиков из заданной локации
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeviceTelemetry'
+        '403':
+          description: У пользователя нет прав на просмотр датчиков локации
+        '404':
+          description: Локация не найдена
+        '500':
+          description: Ошибка сервера
+
+  /v1/telemetry/by_device/{deviceId}:
+    get:
+      summary: Получение телеметрии датчика
+      parameters:
+        - name: userId
+          in: header
+          required: true
+          description: id пользователя
+          schema:
+            type: string
+        - name: deviceId
+          in: path
+          required: true
+          description: Идентификатор датчика
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Телеметрия датчика
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceTelemetry'
+        '403':
+          description: У пользователя нет прав на просмотр показаний датчика
+        '404':
+          description: Датчик не найден
+        '500':
+          description: Ошибка сервера
+
+components:
+  schemas:
+    DeviceTelemetry:
+      type: object
+      properties:
+        deviceId:
+          type: string
+          description: идентификатор датчика
+        deviceType:
+          type: string
+          description: тип датчика
+        value:
+          type: string
+          description: значение показателя
+        unit:
+          type: string
+          description: единица измерения показателя
+        status:
+          type: string
+          description: статус датчика(active, inactive)
+        createdAt:
+          type: string
+          format: date-time
+          description: время измерения
+      required:
+        - deviceId
+        - status
+        - createdAt

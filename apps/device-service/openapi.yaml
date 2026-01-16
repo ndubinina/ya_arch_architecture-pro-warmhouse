@@ -1,0 +1,208 @@
+openapi: 3.0.3
+info:
+  title: Device Service API
+  version: 1.0.0
+
+paths:
+  /v1/device:
+    post:
+      summary: Регистрация нового датчика
+      parameters:
+        - name: userId
+          in: header
+          required: true
+          description: id пользователя
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDeviceRequest'
+            example:
+              locationId: 62b79c75-4b44-45a2-bbc8-9a77ff525be9
+              externalId: 121
+              name: Living Room Temperature
+              type: temperature
+      responses:
+        '201':
+          description: Датчик зарегестрирован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateDeviceResponse'
+              example:
+                deviceId: 88879c75-4b44-45a2-bbc8-9a22ff525be9
+        '404':
+          description: Локация для добавления датчика не найдена
+        '409':
+          description: Конфликт - датчик с заданным external_id уже есть в системе
+        '500':
+          description: Ошибка сервера
+
+  /v1/device/{deviceId}:
+    delete:
+      summary: Удаление датчика
+      parameters:
+        - name: userId
+          in: header
+          required: true
+          description: id пользователя
+          schema:
+            type: string
+          example: 62b79c75-4b44-45a2-bbc8-9a77ff525be9
+        - name: deviceId
+          in: path
+          required: true
+          description: Идентификатор датчика
+          schema:
+            type: string
+          example: 77779c75-4b44-45a2-bbc8-9a77ff525be9
+      responses:
+        '204':
+          description: Датчик удален
+        '403':
+          description: У пользователя нет прав на удаление датчика
+        '500':
+          description: Ошибка сервера
+
+    get:
+      summary: Получение данных датчика
+      parameters:
+        - name: userId
+          in: header
+          required: true
+          description: id пользователя
+          schema:
+            type: string
+          example: 62b79c75-4b44-45a2-bbc8-9a77ff525be9
+        - name: deviceId
+          in: path
+          required: true
+          description: Идентификатор датчика
+          schema:
+            type: string
+          example: 77779c75-4b44-45a2-bbc8-9a77ff525be9
+      responses:
+        '200':
+          description: Информация о датчике
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceResponse'
+              example:
+                deviceId: 77779c75-4b44-45a2-bbc8-9a77ff525be9
+                locationId: 62b79c75-4b44-45a2-bbc8-9a77ff525be9
+                externalId: 121
+                name: Living Room Temperature
+                type: temperature
+        '404':
+          description: У пользователя не найден датчик с заданным id
+        '500':
+          description: Ошибка сервера
+
+  /v1/device/{deviceId}/control:
+    patch:
+      summary: Изменение показаний датчика
+      parameters:
+        - name: userId
+          in: header
+          required: true
+          description: id пользователя
+          schema:
+            type: string
+          example: 33339c75-4b44-45a2-bbc8-9a77ff525be9
+        - name: deviceId
+          in: path
+          required: true
+          description: Идентификатор датчика
+          schema:
+            type: string
+          example: 77779c75-4b44-45a2-bbc8-9a77ff525be9
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceControlRequest'
+            example:
+              value: 23
+              status: active
+      responses:
+        '202':
+          description: Запрос принят в обработку
+        '403':
+          description: У пользователя нет прав на регулирование датчика
+        '404':
+          description: Датчик не найден
+        '500':
+          description: Ошибка сервера
+
+
+components:
+  schemas:
+    CreateDeviceRequest:
+      type: object
+      properties:
+        locationId:
+          type: string
+          description: идентификатор локации датчика
+        externalId:
+          type: string
+          description: идентификатор датчика во внешней системе (device external system)
+        name:
+          type: string
+          description: наименование датчика
+        type:
+          type: string
+          description: тип датчика
+      required:
+        - externalId
+        - name
+        - type
+
+    CreateDeviceResponse:
+      type: object
+      properties:
+        deviceId:
+          type: string
+          description: идентификатор датчика
+      required:
+        - deviceId
+
+    DeviceControlRequest:
+      type: object
+      properties:
+        value:
+          type: string
+          description: значение показателя
+        status:
+          type: string
+          description: статус датчика(active, inactive)
+      required:
+        - value
+        - status
+
+    DeviceResponse:
+      type: object
+      properties:
+        deviceId:
+          type: string
+          description: идентификатор датчика
+        locationId:
+          type: string
+          description: идентификатор локации датчика
+        externalId:
+          type: string
+          description: идентификатор датчика во внешней системе (device external system)
+        name:
+          type: string
+          description: наименование датчика
+        type:
+          type: string
+          description: тип датчика
+      required:
+        - deviceId
+        - externalId
+        - type

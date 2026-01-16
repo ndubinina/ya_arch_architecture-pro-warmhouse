@@ -1,0 +1,59 @@
+asyncapi: 3.0.0
+info:
+  title: Smarthouse Kafka API
+  version: 1.0.0
+  description: API для событий телеметрии датчиков через Kafka
+
+servers:
+  kafka:
+    host: kafka:9092
+    protocol: kafka
+
+channels:
+  telemetry.events:
+    address: telemetry.events
+    summary: События с датчиков об изменении показателей
+    messages:
+      changeValue:
+        $ref: '#/components/messages/TelemetryEventMessage'
+
+components:
+  messages:
+    TelemetryEventMessage:
+      name: TelemetryEvent
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/TelemetryEvent'
+      examples:
+        - summary: Пример изменения показателя датчика
+          payload:
+            device_external_id: "121"
+            value: "22.5"
+            unit: "°C"
+            status: active
+            createdAt: "2026-01-01T14:54:45.907485Z"
+
+  schemas:
+    TelemetryEvent:
+      type: object
+      properties:
+        device_external_id:
+          type: string
+          description: id датчика во внешней системе
+        value:
+          type: string
+          description: значение показателя
+        unit:
+          type: string
+          description: единица измерения показателя
+        status:
+          type: string
+          description: статус датчика(active, inactive)
+        createdAt:
+          type: string
+          format: date-time
+          description: время измерения
+      required:
+        - device_external_id
+        - status
+        - createdAt

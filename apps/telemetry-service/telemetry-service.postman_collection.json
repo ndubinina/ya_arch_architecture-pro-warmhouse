@@ -1,0 +1,38 @@
+{
+	"info": {
+		"_postman_id": "c6c4f5b0-0f9e-4332-b9d1-a3a5ae657e50",
+		"name": "telemetry-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4520405"
+	},
+	"item": [
+		{
+			"name": "getTelemetry_byDevice",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "userId",
+						"value": "62b79c75-4b44-45a2-bbc8-9a77ff525be9",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/v1/telemetry/by_device/62b79c75-4b44-45a2-bbc8-9a77ff525be9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"telemetry",
+						"by_device",
+						"62b79c75-4b44-45a2-bbc8-9a77ff525be9"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

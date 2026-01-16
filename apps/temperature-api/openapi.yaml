@@ -1,0 +1,121 @@
+openapi: 3.0.3
+info:
+  title: Temperature API
+  version: 1.0.0
+
+paths:
+  /temperature:
+    get:
+      summary: Получение телеметрии датчиков из заданной локации
+      parameters:
+        - name: location
+          in: query
+          required: true
+          description: Локация датчиков
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Список телеметрий для всех датчиков из заданной локации
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemperatureResponse'
+
+  /temperature/{sensorId}:
+    get:
+      summary: Получение телеметрии датчика по id
+      parameters:
+        - name: sensorId
+          in: path
+          required: true
+          description: id датчика
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Телеметрия датчика
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemperatureResponse'
+
+  /device/{deviceId}/control:
+    patch:
+      summary: Управление показателями датчика
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          description: id датчика
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceControlRequest'
+            example:
+              value: 21.0
+              status: active
+      responses:
+        '202':
+          description: Команда принята в обработку
+
+  /device/{deviceId}/produce_value:
+    post:
+      summary: Отправка изменения показаний датчика в kafka (value генерируется случайно)
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          description: id датчика
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ок
+
+components:
+  schemas:
+    TemperatureResponse:
+      type: object
+      properties:
+        sensor_id:
+          type: string
+        sensor_type:
+          type: string
+        value:
+          type: string
+          format: float
+        unit:
+          type: string
+        status:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        location:
+          type: string
+        description:
+          type: string
+      required:
+        - deviceId
+        - status
+        - createdAt
+
+    DeviceControlRequest:
+      type: object
+      properties:
+        value:
+          type: string
+          description: значение показателя
+        status:
+          type: string
+          description: статус датчика(active, inactive)
+      required:
+        - value
+        - status

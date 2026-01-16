@@ -1,0 +1,130 @@
+{
+	"info": {
+		"_postman_id": "6506b603-59b2-46c6-9e19-ccd1245b6c93",
+		"name": "device-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4520405"
+	},
+	"item": [
+		{
+			"name": "createDevice",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"externalId\": \"121\",\n    \"name\": \"Living Room Temperature\",\n    \"type\": \"temperature\",\n    \"locationId\": null\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/device",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"device"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getDevice",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "userId",
+						"value": "62b79c75-4b44-45a2-bbc8-9a77ff525be9",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8082/v1/device/f58e0f9e-3ae7-4dc1-babe-ef6535c4d4ed",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"v1",
+						"device",
+						"f58e0f9e-3ae7-4dc1-babe-ef6535c4d4ed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "controlDevice",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "userId",
+						"value": "62b79c75-4b44-45a2-bbc8-9a77ff525be9",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"value\": \"23.1\",\n    \"status\": \"active\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8082/v1/device/f58e0f9e-3ae7-4dc1-babe-ef6535c4d4ed/control",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"v1",
+						"device",
+						"f58e0f9e-3ae7-4dc1-babe-ef6535c4d4ed",
+						"control"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteDevice",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "userId",
+						"value": "62b79c75-4b44-45a2-bbc8-9a77ff525be9",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/v1/device/ce964804-3bdb-48d3-b620-8fc787b0270d",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"device",
+						"ce964804-3bdb-48d3-b620-8fc787b0270d"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

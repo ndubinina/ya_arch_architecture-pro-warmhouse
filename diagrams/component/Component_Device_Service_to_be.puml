@@ -1,0 +1,31 @@
+@startuml
+title DeviceService Component Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(SmartHouseSystem, "SmartHouse System") {
+  Container(DeviceService, "Device Service", "Kotlin, Spring", "Управление датчиками пользователя")
+  Container(DeviceDatabase, "Device Database", "PostgreSQL", "Хранит датчики пользователя")
+  ContainerQueue(Kafka, "Kafka", "Kafka", "События изменения датчика")
+}
+
+System_Ext(device_ext, "Device External System", "Датчики")
+
+Container(DeviceService, "Device Service", "Kotlin, Spring") {
+  Component(DeviceController, "DeviceController", "Управление датчиком")
+  Component(ServiceLayer, "ServiceLayer", "Бизнес логика")
+  Component(RepositoryLayer, "RepositoryLayer", "Инкапсуляция специфики БД")
+  Component(AdapterDeviceExtLayer, "AdapterDeviceExtLayer", "Инкапсулирует специфику взаимодействия с внешней системой")
+  Component(KafkaPublisherLayer, "KafkaPublisherLayer", "Инкапсулирует специфику взаимодействия с кафкой")
+}
+
+Rel(DeviceController,ServiceLayer,"Управление датчиком")
+Rel(ServiceLayer,RepositoryLayer,"Запрос/обновление данных")
+Rel(RepositoryLayer,DeviceDatabase,"Запрос/обновление данных")
+Rel(ServiceLayer,AdapterDeviceExtLayer,"Обновление данных датчика")
+Rel(AdapterDeviceExtLayer,device_ext,"Обновление данных датчика")
+Rel(ServiceLayer,KafkaPublisherLayer,"Датчик добавлен/удален")
+Rel(KafkaPublisherLayer,Kafka,"Датчик добавлен/удален")
+@enduml
